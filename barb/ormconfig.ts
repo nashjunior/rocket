@@ -1,0 +1,36 @@
+module.exports = [
+  {
+    name: 'default',
+    type: 'postgres',
+    host: '172.18.224.195',
+    port: 5432,
+    username: 'postgres',
+    password: 'docker',
+    database: 'goBarber',
+    synchronize: false,
+    logging: false,
+    entities: ['src/models/**/*.ts'],
+    migrations: ['src/database/migrations/*.ts'],
+    subscribers: ['src/subscriber/**/*.ts'],
+    cli: {
+      migrationsDir: 'src/database/migrations',
+    },
+  },
+  // {
+  //   name: 'default',
+  //   type: 'postgres',
+  //   host: '127.0.0.1',
+  //   port: 5432,
+  //   username: 'postgres',
+  //   password: 'docker',
+  //   database: 'goBarber',
+  //   synchronize: false,
+  //   logging: false,
+  //   entities: ['src/models/**/*.ts'],
+  //   migrations: ['src/database/migrations/*.ts'],
+  //   subscribers: ['src/subscriber/**/*.ts'],
+  //   cli: {
+  //     migrationsDir: 'src/database/migrations',
+  //   },
+  // },
+];
