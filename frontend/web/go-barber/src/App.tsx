@@ -1,14 +1,17 @@
 import React, { useCallback } from 'react';
 import SignIn from './pages/Signin';
 import GlobalStyle from './styles/global';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider } from './hooks/Auth';
+import ToastContainer from './components/ToastContainer';
+import { ToastProvider } from './hooks/Toast';
+import AppProvider from './hooks';
 
 const App: React.FC = () => {
   return (
     <>
-      <AuthProvider>
+      <AppProvider>
         <SignIn />
-      </AuthProvider>
+      </AppProvider>
       <GlobalStyle />
     </>
   );
