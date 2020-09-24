@@ -5,15 +5,17 @@ import { AuthProvider } from './hooks/Auth';
 import ToastContainer from './components/ToastContainer';
 import { ToastProvider } from './hooks/Toast';
 import AppProvider from './hooks';
+import { BrowserRouter as Router } from 'react-router-dom';
+import Routes from './routes';
 
 const App: React.FC = () => {
   return (
-    <>
+    <Router>
       <AppProvider>
-        <SignIn />
+        <Routes />
       </AppProvider>
       <GlobalStyle />
-    </>
+    </Router>
   );
 };
 
