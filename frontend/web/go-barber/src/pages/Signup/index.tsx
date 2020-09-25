@@ -8,28 +8,57 @@ import Input from '../../components/Input';
 import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import getValidationErrors from '../../utils/getValidationErrors';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import api from '../../services/api';
+import { useToast } from '../../hooks/Toast';
+
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
 
 const Signup: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
+  const { addToast } = useToast();
+  const { push } = useHistory();
 
-  const handleSubmit = useCallback(async (data: object) => {
-    try {
-      formRef.current?.setErrors({});
+  const handleSubmit = useCallback(
+    async (data: SignUpFormData) => {
+      try {
+        formRef.current?.setErrors({});
 
-      const schema = Yup.object().shape({
-        name: Yup.string().required('Nome Obrigatorio'),
-        email: Yup.string()
-          .required('Email Obrigatorio')
-          .email('Digite um e-mail valido'),
-        password: Yup.string().min(6, 'No minimo 6 dígitos'),
-      });
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Nome Obrigatorio'),
+          email: Yup.string()
+            .required('Email Obrigatorio')
+            .email('Digite um e-mail valido'),
+          password: Yup.string().min(6, 'No minimo 6 dígitos'),
+        });
 
-      await schema.validate(data, { abortEarly: false });
-    } catch (error) {
-      formRef.current?.setErrors(getValidationErrors(error));
-    }
-  }, []);
+        await schema.validate(data, { abortEarly: false });
+
+        await api.post('/users', data);
+        addToast({
+          type: 'success',
+          title: 'Cadastro realizado com sucesso',
+          description: 'Voce já pode fazer seu logon no GoBarber',
+        });
+        push('/');
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          formRef.current?.setErrors(getValidationErrors(error));
+          return;
+        }
+        addToast({
+          type: 'error',
+          title: 'Erro na Autenticaçao',
+          description: 'Ocorreu um erro ao fazer cadastro. Tente novamente',
+        });
+      }
+    },
+    [addToast, push],
+  );
 
   return (
     <Container>

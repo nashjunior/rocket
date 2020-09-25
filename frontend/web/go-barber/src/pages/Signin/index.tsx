@@ -10,7 +10,7 @@ import { FormHandles } from '@unform/core';
 import * as Yup from 'yup';
 import { useAuth } from '../../hooks/Auth';
 import { useToast } from '../../hooks/Toast';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 interface SignInFormData {
   email: string;
@@ -20,6 +20,7 @@ interface SignInFormData {
 const SignIn: React.FC = () => {
   const { user, signIn } = useAuth();
   const { addToast, removeToast } = useToast();
+  const { push } = useHistory();
 
   const formRef = useRef<FormHandles>(null);
 
@@ -37,6 +38,7 @@ const SignIn: React.FC = () => {
 
         await schema.validate(data, { abortEarly: false });
         await signIn({ email: data.email, password: data.password });
+        push('/dashboard');
       } catch (error) {
         if (error instanceof Yup.ValidationError) {
           formRef.current?.setErrors(getValidationErrors(error));
@@ -49,7 +51,7 @@ const SignIn: React.FC = () => {
         });
       }
     },
-    [signIn, addToast],
+    [signIn, addToast, push],
   );
 
   return (
